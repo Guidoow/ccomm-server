@@ -12,7 +12,7 @@ const ENV_REQUIRED_VARIABLES = [
   'ABLY_UUID',
 ];
 
-for (const var_name in ENV_REQUIRED_VARIABLES) {
+for (const var_name of ENV_REQUIRED_VARIABLES) {
   if (!Boolean(env[var_name]))
     throw new Error(
       `.ENV is not setted properly, required ${var_name} variable.`,
