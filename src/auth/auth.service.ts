@@ -25,10 +25,11 @@ export class AuthService {
       request.method === 'GET' && route.path === '/auth',
     );
 
+    await this.tokenService.removeExpired();
+
     if (ID || (ID && !wantsNewToken)) return await this.validate(request, ID);
 
     if (wantsNewToken) {
-      await this.tokenService.removeExpired();
       const tokens = await this.tokenService.get();
 
       const filteredTokens = tokens.filter(

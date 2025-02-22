@@ -319,7 +319,11 @@ export class ChannelsService implements OnModuleDestroy {
 
     const token = await this.generateToken(request.token.endpoint, channelName);
 
+    const expiresIn = 1000 * 60 * 60 * 23;
+    const expireDate = new Date(new Date().getTime() + expiresIn);
+
     const channel: Channel = {
+      expireDate,
       from: request.token.endpoint,
       to: endpoint,
       channel: channelName,
@@ -386,5 +390,16 @@ export class ChannelsService implements OnModuleDestroy {
     }
 
     return null;
+  }
+
+  async removeExpired() {
+    const channels = await this.get();
+
+    const date = new Date();
+    for (const channel of channels) {
+      const channelExpired = date > new Date(channel.expireDate);
+
+      if (channelExpired) this.del(channel.channel);
+    }
   }
 }
